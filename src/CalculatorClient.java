@@ -6,28 +6,26 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-import gui.ClientGUI;
-
-/*
-Classname: CalculatorClient
-Comment: The RMI client.
-*/
-
+/**
+ * 
+ * @author Colum Foskin The CalculatorClient class which acts as the RMI client.
+ *         This class calls a new GUI for the client on start up. The GUI is a
+ *         seperate class called ClientGUI
+ */
 public class CalculatorClient {
-
 	static String message = "blank";
-	static double total = 0;
-	ClientGUI clientGui;
-	private String fullInput = "";
-	private String currentOperator;
-	private boolean isOperatorLastInput = false;
-	private String arrayOfInputs[] = new String[2];
-	// The Calculator object "obj" is the identifier that is
-	// used to refer to the remote object that implements
-	// the Calculator interface.
-
+	static double total = 0; // the total of calculating the two operands
+	ClientGUI clientGui; // the client gui
+	private String fullInput = ""; // the current input for an operand
+	private String currentOperator;// the current operator
+	private boolean isOperatorLastInput = false;// used to check if the operator
+												// was pressed previously
+	private String arrayOfInputs[] = new String[2]; // store the inputs
 	static Calculator obj = null;
 
+	/**
+	 * Create a new client
+	 */
 	public CalculatorClient() {
 		clientGui = new ClientGUI();
 		addListeners();
@@ -39,10 +37,22 @@ public class CalculatorClient {
 		}
 	}
 
+	/**
+	 * Main method to start the app
+	 * 
+	 * @param args
+	 */
 	public static void main(String args[]) {
 		new CalculatorClient();
 	}
 
+	/**
+	 * Checks an input - inputted by the client and handles it based on whether
+	 * it is an operator or an operand.
+	 * 
+	 * @param input
+	 *            - the input taken in from the GUI
+	 */
 	private void checkInput(String input) {
 		if (!checkIfOperator(input)) {
 			clientGui.dataInputJta.append(input);
@@ -61,6 +71,10 @@ public class CalculatorClient {
 		}
 	}
 
+	/**
+	 * Submit button is pressed so handle inputs, call the doCalculation()
+	 * method and then reset the array of inputs and current operators
+	 */
 	private void submit() {
 		this.arrayOfInputs[1] = this.fullInput;
 		isOperatorLastInput = false;
@@ -72,6 +86,10 @@ public class CalculatorClient {
 		this.arrayOfInputs[1] = null;
 	}
 
+	/**
+	 * perform a calcluation by invoking the correct method based on the current
+	 * operator.
+	 */
 	private void doCalculation() {
 		double x = Double.valueOf(this.arrayOfInputs[0]);
 		double y = Double.valueOf(this.arrayOfInputs[1]);
@@ -99,6 +117,12 @@ public class CalculatorClient {
 		}
 	}
 
+	/**
+	 * check is the input is an operator and return true or false
+	 * 
+	 * @param input
+	 * @return
+	 */
 	private boolean checkIfOperator(String input) {
 		boolean result = false;
 		String[] operators = { "+", "-", "/", "*" };
@@ -110,6 +134,9 @@ public class CalculatorClient {
 		return result;
 	}
 
+	/**
+	 * add action listeners to the GUI
+	 */
 	private void addListeners() {
 		clientGui.button0.addActionListener(new ActionListener() {
 			@Override
@@ -181,13 +208,6 @@ public class CalculatorClient {
 			}
 		});
 
-		clientGui.buttonClear.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// clear();
-			}
-		});
-
 		clientGui.buttonDivide.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -222,7 +242,6 @@ public class CalculatorClient {
 				checkInput("-");
 			}
 		});
-
 	}
 
 }
