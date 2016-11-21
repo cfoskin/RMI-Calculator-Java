@@ -58,15 +58,21 @@ public class CalculatorClient {
 			clientGui.dataInputJta.append(input);
 			this.fullInput += input;
 		} else {
-			if (!isOperatorLastInput) {
-				this.currentOperator = input;
-				clientGui.dataInputJta.append(input);
-				this.arrayOfInputs[0] = this.fullInput;
-				this.fullInput = "";
-				isOperatorLastInput = true;
-			} else {
-				clientGui.systemMessageJta.append("You cannot enter two operators in a row!");
-				this.fullInput = "";
+			if(this.fullInput != ""){
+				if (!isOperatorLastInput) {
+					this.currentOperator = input;
+					clientGui.dataInputJta.append(input);
+					this.arrayOfInputs[0] = this.fullInput;
+					this.fullInput = "";
+					isOperatorLastInput = true;
+				} else {
+					clientGui.systemMessageJta.append("You cannot enter two operators in a row!");
+					this.fullInput = "";
+				}
+			}
+			else{
+				clientGui.systemMessageJta.setText("You must enter an operand first!");
+				clearData();
 			}
 		}
 	}
@@ -79,13 +85,20 @@ public class CalculatorClient {
 		this.arrayOfInputs[1] = this.fullInput;
 		isOperatorLastInput = false;
 		doCalculation();
+		clearData();
+	}
+
+	/**
+	 * Clear all data
+	 */
+	private void clearData() {
 		clientGui.dataInputJta.setText("");
 		this.currentOperator = "";
 		this.fullInput = "";
 		this.arrayOfInputs[0] = null;
 		this.arrayOfInputs[1] = null;
 	}
-
+	
 	/**
 	 * perform a calcluation by invoking the correct method based on the current
 	 * operator.
